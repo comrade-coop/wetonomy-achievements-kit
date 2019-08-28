@@ -23,32 +23,31 @@ namespace Wetonomy.Achievements
 		{
 			var state = base.GetState();
 
-			state.AddAddress("MintTokenManager", this.BurnTokenManager);
-			state.AddAddress("BurnTokenManager", this.BurnTokenManager);
-			state.AddAddress("Exchanger", this.Exchanger);
+			state.Set("MintTokenManager", this.MintTokenManager);
+			state.Set("BurnTokenManager", this.BurnTokenManager);
+			state.Set("Exchanger", this.Exchanger);
 
 			return state;
 		}
 
-		public override void SetState(IDictionary<string, object> state)
+		protected override void SetState(IDictionary<string, object> state)
 		{
 			base.SetState(state);
 
-			this.BurnTokenManager = state.GetAddress("BurnTokenManager");
-			this.MintTokenManager = state.GetAddress("MintTokenManager");
-			this.Exchanger = state.GetAddress("Exchanger");
+			this.BurnTokenManager = state.Get<Address>("BurnTokenManager");
+			this.MintTokenManager = state.Get<Address>("MintTokenManager");
+			this.Exchanger = state.Get<Address>("Exchanger");
 		}
 
 		protected override void Split(Address tokenManager, IReadOnlyTaggedTokens availableTokens)
 		{
 			if (tokenManager.Equals(this.BurnTokenManager))
 			{
-				// Burn, forwarding through the Exchanger; it should re-mint the tokens in response. This would subsequently result in splitting the tokens when they are received.
-				this.SendAction(this.Exchanger, ExchangeAction.Type, new Dictionary<string, object>()
+				this.SendMessage(this.Exchanger, ExchangeAction.Type, new Dictionary<string, object>()
 				{
 					{ ExchangeAction.Amount, availableTokens.TotalBalance.ToString() },
-					{ ExchangeAction.FromTokenManager, this.BurnTokenManager.ToBase64String() },
-					{ ExchangeAction.ToTokenManager, this.MintTokenManager.ToBase64String() },
+					{ ExchangeAction.FromTokenManager, this.BurnTokenManager.ToString() },
+					{ ExchangeAction.ToTokenManager, this.MintTokenManager.ToString() },
 				});
 			}
 			else
