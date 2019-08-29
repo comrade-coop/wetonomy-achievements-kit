@@ -61,30 +61,23 @@ namespace Wetonomy.Achievements
 
 			this.SendMessage(burnTokenManager, AddPermissionAction.Type, new Dictionary<string, object>()
 			{
-				{ "Sender", achievementFactory.ToString() },
-				{ "Type", BurnOtherAction.Type },
-				{ "Target", burnTokenManager.ToString() },
+				{ AddPermissionAction.PermissionSender, achievementFactory.ToString() },
+				{ AddPermissionAction.PermissionType, BurnOtherAction.Type },
+				{ AddPermissionAction.PermissionTarget, burnTokenManager.ToString() },
+			});
+
+			this.SendMessage(burnTokenManager, RemovePermissionAction.Type, new Dictionary<string, object>()
+			{
+				{ RemovePermissionAction.PermissionSender, AccessControlList.AnyAddress },
+				{ RemovePermissionAction.PermissionType, TransferAction.Type },
+				{ RemovePermissionAction.PermissionTarget, mintTokenManager.ToString() },
 			});
 
 			this.SendMessage(mintTokenManager, AddPermissionAction.Type, new Dictionary<string, object>()
 			{
-				{ "Sender", achievementFactory.ToString() },
-				{ "Type", MintAction.Type },
-				{ "Target", mintTokenManager.ToString() },
-			});
-
-			this.SendMessage(mintTokenManager, RemovePermissionAction.Type, new Dictionary<string, object>()
-			{
-				{ "Sender", AccessControlList.AnyAddress },
-				{ "Type", TransferAction.Type },
-				{ "Target", mintTokenManager.ToString() },
-			});
-
-			this.SendMessage(mintTokenManager, AddPermissionAction.Type, new Dictionary<string, object>()
-			{
-				{ "Sender", achievementFactory.ToString() },
-				{ "Type", TransferAction.Type },
-				{ "Target", mintTokenManager.ToString() },
+				{ AddPermissionAction.PermissionSender, achievementFactory.ToString() },
+				{ AddPermissionAction.PermissionType, MintAction.Type },
+				{ AddPermissionAction.PermissionTarget, mintTokenManager.ToString() },
 			});
 
 			this.ChangeAdmin(burnTokenManager, initialManager);
@@ -96,30 +89,30 @@ namespace Wetonomy.Achievements
 		{
 			this.SendMessage(target, AddPermissionAction.Type, new Dictionary<string, object>()
 			{
-				{ "Sender", newAdmin.ToString() },
-				{ "Type", AddPermissionAction.Type },
-				{ "Target", target.ToString() },
+				{ AddPermissionAction.PermissionSender, newAdmin.ToString() },
+				{ AddPermissionAction.PermissionType, AddPermissionAction.Type },
+				{ AddPermissionAction.PermissionTarget, target.ToString() },
 			});
 
 			this.SendMessage(target, AddPermissionAction.Type, new Dictionary<string, object>()
 			{
-				{ "Sender", newAdmin.ToString() },
-				{ "Type", RemovePermissionAction.Type },
-				{ "Target", target.ToString() },
+				{ AddPermissionAction.PermissionSender, newAdmin.ToString() },
+				{ AddPermissionAction.PermissionType, RemovePermissionAction.Type },
+				{ AddPermissionAction.PermissionTarget, target.ToString() },
 			});
 
 			this.SendMessage(target, RemovePermissionAction.Type, new Dictionary<string, object>()
 			{
-				{ "Sender", this.Address.ToString() },
-				{ "Type", AddPermissionAction.Type },
-				{ "Target", target.ToString() },
+				{ RemovePermissionAction.PermissionSender, this.Address.ToString() },
+				{ RemovePermissionAction.PermissionType, AddPermissionAction.Type },
+				{ RemovePermissionAction.PermissionTarget, target.ToString() },
 			});
 
 			this.SendMessage(target, RemovePermissionAction.Type, new Dictionary<string, object>()
 			{
-				{ "Sender", this.Address.ToString() },
-				{ "Type", RemovePermissionAction.Type },
-				{ "Target", target.ToString() },
+				{ RemovePermissionAction.PermissionSender, this.Address.ToString() },
+				{ RemovePermissionAction.PermissionType, RemovePermissionAction.Type },
+				{ RemovePermissionAction.PermissionTarget, target.ToString() },
 			});
 		}
 	}
