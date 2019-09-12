@@ -37,6 +37,8 @@ namespace Wetonomy.Achievements
 
 		protected override void Instantiate(Address initialManager)
 		{
+			var achievements = new List<object>();
+
 			var burnTokenManager = this.CreateContract<TokenManager>(new Dictionary<string, object>()
 			{
 				{ "Admin", this.Address.ToString() },
@@ -53,6 +55,7 @@ namespace Wetonomy.Achievements
 			{
 				{ "Admin", initialManager.ToString() },
 				{ "User", AccessControlList.AnyAddress },
+				{ "Achievements", achievements },
 				{ "BurnTokenManager", burnTokenManager.ToString() },
 				{ "MintTokenManager", mintTokenManager.ToString() },
 				{ "ExchangeRateNumerator", this.ExchangeRateNumerator },

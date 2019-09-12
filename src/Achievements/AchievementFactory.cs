@@ -10,11 +10,14 @@ using StrongForce.Core.Permissions;
 using TokenSystem.TokenFlow;
 using TokenSystem.TokenFlow.Actions;
 using TokenSystem.TokenManagerBase.Actions;
+using TokenSystem.Tokens;
 
 namespace Wetonomy.Achievements
 {
 	public class AchievementFactory : TokenExchanger
 	{
+		protected List<Address> Achievements { get; set; }
+
 		protected Address BurnTokenManager { get; set; }
 
 		protected Address MintTokenManager { get; set; }
@@ -25,6 +28,7 @@ namespace Wetonomy.Achievements
 
 			state.Set("BurnTokenManager", this.BurnTokenManager);
 			state.Set("MintTokenManager", this.MintTokenManager);
+			state.Set("Achievements", this.Achievements);
 
 			return state;
 		}
@@ -35,6 +39,7 @@ namespace Wetonomy.Achievements
 
 			this.BurnTokenManager = state.Get<Address>("BurnTokenManager");
 			this.MintTokenManager = state.Get<Address>("MintTokenManager");
+			this.Achievements = state.GetList<Address>("Achievements").ToList();
 		}
 
 		protected override void Initialize(IDictionary<string, object> payload)
@@ -55,8 +60,8 @@ namespace Wetonomy.Achievements
 			switch (message.Type)
 			{
 				case CreateAchievementAction.Type:
-					var recipients = message.Payload.GetList<Address>("Recipients").ToHashSet();
-					this.CreateAchievement(recipients);
+					
+					this.CreateAchievement(message.Payload);
 					break;
 				default:
 					base.HandleMessage(message);
@@ -64,19 +69,25 @@ namespace Wetonomy.Achievements
 			}
 		}
 
-		protected Address CreateAchievement(ISet<Address> recipients)
+		protected Address CreateAchievement(IDictionary<string, object> payload)
 		{
+			var recipients = payload.GetList<Address>("Recipients").ToHashSet();
+			var describtion = payload.Get<string>("Describtion");
 			var address = this.CreateContract<Achievement>(new Dictionary<string, object>()
 			{
 				{ "MintTokenManager", this.MintTokenManager.ToString() },
 				{ "BurnTokenManager", this.BurnTokenManager.ToString() },
 				{ "Exchanger", this.Address.ToString() },
+				{ "Describtion", describtion },
+				// { "TokenContributors", new Dictionary<Address, object>()}
 			});
 
 			this.Acl.AddPermission(
 				address,
 				ExchangeAction.Type,
 				this.Address);
+
+			this.Achievements.Add(address);
 
 			return address;
 		}
