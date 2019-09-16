@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Wetonomy.TokenSystem" Version="0.0.0" />
-    <PackageReference Include="StrongForce.Core" Version="0.3.0" />
+    <ProjectReference Include="..\..\..\wetonomy\src\TokenSystem\TokenSystem.csproj" />
+    <PackageReference Include="StrongForce" Version="0.3.0" />
   </ItemGroup>
   <ItemGroup>
       <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-rc.108" />

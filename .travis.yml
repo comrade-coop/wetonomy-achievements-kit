@@ -6,9 +6,8 @@ mono: none
 dotnet: 2.2
 
 install:
-  - dotnet restore SmartContracts.NET/
+  - pushd ..; git clone https://github.com/comrade-coop/wetonomy.git wetonomy; popd
+  - dotnet restore src/
 
 script:
-  - dotnet build SmartContracts.NET/
-  - dotnet test SmartContracts.NET/StrongForce.Core.Tests/ --no-build --verbosity=normal
-  - dotnet test SmartContracts.NET/StrongForce.Integrations.Cosmos.Tests/ --no-build --verbosity=normal
+  - dotnet build src/
